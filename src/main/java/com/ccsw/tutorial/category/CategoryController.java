@@ -1,15 +1,19 @@
 package com.ccsw.tutorial.category;
 
+import com.ccsw.tutorial.category.model.Category;
 import com.ccsw.tutorial.category.model.CategoryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * @author Xavi-H
+ * @author ccsw
+ *
  */
 @Tag(name = "Category", description = "API of Category")
 @RequestMapping(value = "/category")
@@ -18,10 +22,13 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    CategoryService categoryService;
+
+    @Autowired
+    ModelMapper mapper;
 
     /**
-     * Método para recuperar todas las categorias
+     * Método para recuperar todas las {@link Category}
      *
      * @return {@link List} de {@link CategoryDto}
      */
@@ -29,11 +36,13 @@ public class CategoryController {
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<CategoryDto> findAll() {
 
-        return this.categoryService.findAll();
+        List<Category> categories = this.categoryService.findAll();
+
+        return categories.stream().map(e -> mapper.map(e, CategoryDto.class)).collect(Collectors.toList());
     }
 
     /**
-     * Método para crear o actualizar una categoria
+     * Método para crear o actualizar una {@link Category}
      *
      * @param id PK de la entidad
      * @param dto datos de la entidad
@@ -46,14 +55,15 @@ public class CategoryController {
     }
 
     /**
-     * Método para borrar una categoria
+     * Método para borrar una {@link Category}
      *
      * @param id PK de la entidad
      */
     @Operation(summary = "Delete", description = "Method that deletes a Category")
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") Long id) throws Exception {
 
         this.categoryService.delete(id);
     }
+
 }
