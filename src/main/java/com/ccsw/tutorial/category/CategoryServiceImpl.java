@@ -1,13 +1,15 @@
 package com.ccsw.tutorial.category;
 
 import com.ccsw.tutorial.category.model.CategoryDto;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CategoryServiceImpl {
+@Service
+public class CategoryServiceImpl implements CategoryService {
 
     // Atributos
 

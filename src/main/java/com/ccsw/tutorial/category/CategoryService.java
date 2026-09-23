@@ -9,12 +9,10 @@ import java.util.List;
  */
 public interface CategoryService {
 
-    // TODO: Revisar link
-
     /**
      * Método para recuperar todas las categorías
      *
-     * @return {@link List} de {@link Category}
+     * @return {@link List} de {@link CategoryDto}
      */
     List<CategoryDto> findAll();
 
