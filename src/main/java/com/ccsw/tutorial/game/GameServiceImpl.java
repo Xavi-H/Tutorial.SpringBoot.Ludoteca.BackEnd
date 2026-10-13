@@ -42,7 +42,10 @@ public class GameServiceImpl implements GameService {
         // Desde la versión 3.5.0 de Spring Boot, la nueva manera es
         Specification<Game> spec = titleSpec.and(categorySpec);
 
-        return (List<Game>) this.gameRepository.findAll();
+        // Si no se filtra por titulo ni categoria sigue funcionando porque
+        // GameSpecification devuelve null y Specification permite ese caso,
+        // por lo tanto devuelve todos los juegos sin filtro
+        return (List<Game>) this.gameRepository.findAll(spec);
     }
 
     /**
