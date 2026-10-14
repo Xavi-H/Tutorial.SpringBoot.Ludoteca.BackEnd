@@ -2,6 +2,7 @@ package com.ccsw.tutorial.category;
 
 import com.ccsw.tutorial.category.model.Category;
 import com.ccsw.tutorial.category.model.CategoryDto;
+import com.ccsw.tutorial.game.GameRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -21,6 +22,9 @@ public class CategoryTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private GameRepository gameRepository;
 
     @InjectMocks
     private CategoryServiceImpl categoryService;

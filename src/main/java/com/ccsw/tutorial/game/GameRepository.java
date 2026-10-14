@@ -17,4 +17,7 @@ public interface GameRepository extends CrudRepository<Game, Long>, JpaSpecifica
     @Override
     @EntityGraph(attributePaths = { "category", "author" })
     List<Game> findAll(Specification<Game> spec);
+
+    // Comprova si hi ha un joc amb el id de la categoria que rep
+    boolean existsByCategoryId(Long categoryId);
 }
