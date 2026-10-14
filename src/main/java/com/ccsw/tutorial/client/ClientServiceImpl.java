@@ -2,6 +2,7 @@ package com.ccsw.tutorial.client;
 
 import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.client.model.ClientDto;
+import com.ccsw.tutorial.common.exception.ConflictException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,8 +38,6 @@ public class ClientServiceImpl implements ClientService {
         return (List<Client>) this.clientRepository.findAll();
     }
 
-    // TODO: Hacer que si ya existe no permita crearlo
-
     /**
      * {@inheritDoc}
      */
@@ -51,10 +50,10 @@ public class ClientServiceImpl implements ClientService {
         } else {
             client = this.get(id);
         }
-
+        // TODO: Permitir editar un cliente sin modificar su nombre (salta la excepcion)
         // Comprova si ja existeix un client amb aquest nom
         if (clientRepository.existsByName(dto.getName())) {
-            throw new Exception("Ja existeix un client amb aquest nom");
+            throw new ConflictException("Ja existeix un client amb aquest nom");
         }
         // Si no existeix el guarda correctament
         client.setName(dto.getName());
