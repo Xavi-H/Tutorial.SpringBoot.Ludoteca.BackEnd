@@ -3,6 +3,8 @@ package com.ccsw.tutorial.author;
 import com.ccsw.tutorial.author.model.Author;
 import com.ccsw.tutorial.author.model.AuthorDto;
 import com.ccsw.tutorial.author.model.AuthorSearchDto;
+import com.ccsw.tutorial.common.exception.ConflictException;
+import com.ccsw.tutorial.game.GameRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,8 @@ public class AuthorServiceImpl implements AuthorService {
         this.authorRepository.save(author);
     }
 
+    @Autowired
+    GameRepository gameRepository;
     /**
      * {@inheritDoc}
      */
@@ -67,6 +71,11 @@ public class AuthorServiceImpl implements AuthorService {
 
         if (this.get(id) == null) {
             throw new Exception("Not exists");
+        }
+
+        // Abans d'eliminar comprova si hi ha jocs asociats a l'autor que es vol eliminar
+        if (this.gameRepository.existsByAuthorId(id)) {
+            throw new ConflictException("No se puede eliminar el autor porque tiene juegos asociados.");
         }
 
         this.authorRepository.deleteById(id);

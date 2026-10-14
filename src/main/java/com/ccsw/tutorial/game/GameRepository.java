@@ -20,4 +20,7 @@ public interface GameRepository extends CrudRepository<Game, Long>, JpaSpecifica
 
     // Comprova si hi ha un joc amb el id de la categoria que rep
     boolean existsByCategoryId(Long categoryId);
+
+    // Comprova si hi ha un joc amb el id de l'autor que rep
+    boolean existsByAuthorId(Long authorId);
 }
