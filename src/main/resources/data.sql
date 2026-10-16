@@ -38,5 +38,13 @@ INSERT INTO game(title, age, category_id, author_id)
 VALUES ('Azul', '8', 3, 5);
 
 /* Clients */
-INSERT INTO client(name)
-VALUES ('Xavi');
+INSERT INTO client(name) VALUES ('Xavi');
+INSERT INTO client(name) VALUES ('Ana');
+INSERT INTO client(name) VALUES ('Marc');
+
+/* Prestamos */
+INSERT INTO prestamo(game_id, client_id, start_date, end_date) VALUES (1, 1, '2026-10-01', '2026-10-10');
+INSERT INTO prestamo(game_id, client_id, start_date, end_date) VALUES (2, 1, '2026-10-05', '2026-10-12');
+INSERT INTO prestamo(game_id, client_id, start_date, end_date) VALUES (3, 3, '2026-10-08', '2026-10-15');
+INSERT INTO prestamo(game_id, client_id, start_date, end_date) VALUES (1, 3, '2026-10-11', '2026-10-18');
+INSERT INTO prestamo(game_id, client_id, start_date, end_date) VALUES (4, 1, '2026-10-13', '2026-10-20');
