@@ -3,13 +3,15 @@ package com.ccsw.tutorial.prestamo;
 import com.ccsw.tutorial.prestamo.model.Prestamo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  * @author Xavi-H
  */
-public interface PrestamoRepository extends CrudRepository<Prestamo, Long> {
+public interface PrestamoRepository extends CrudRepository<Prestamo, Long>, JpaSpecificationExecutor<Prestamo> {
 
     /**
      * Por defecto Hibernate carga las relaciones (juego y cliente) con consultas
@@ -20,7 +22,8 @@ public interface PrestamoRepository extends CrudRepository<Prestamo, Long> {
      * @param pageable datos de paginación (página, tamaño y orden)
      * @return {@link Page} de {@link Prestamo}
      */
+    @Override
     @EntityGraph(attributePaths = { "game", "game.category", "game.author", "client" })
 
-    Page<Prestamo> findAll(Pageable pageable);
+    Page<Prestamo> findAll(Specification<Prestamo> spec, Pageable pageable);
 }
