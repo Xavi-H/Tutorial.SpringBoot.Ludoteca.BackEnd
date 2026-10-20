@@ -31,6 +31,16 @@ public class GameServiceImpl implements GameService {
     CategoryService categoryService;
 
     /**
+     * Obté un Game pol seu id, es necesari per filtrar els prestams
+     * @param id PK de la entidad
+     * @return {@link Game}
+     */
+    @Override
+    public Game get(Long id) {
+        return this.gameRepository.findById(id).orElse(null);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

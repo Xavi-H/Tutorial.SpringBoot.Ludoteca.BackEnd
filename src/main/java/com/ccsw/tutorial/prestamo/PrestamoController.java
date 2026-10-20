@@ -1,7 +1,5 @@
 package com.ccsw.tutorial.prestamo;
 
-import com.ccsw.tutorial.author.model.Author;
-import com.ccsw.tutorial.author.model.AuthorDto;
 import com.ccsw.tutorial.prestamo.model.Prestamo;
 import com.ccsw.tutorial.prestamo.model.PrestamoDto;
 import com.ccsw.tutorial.prestamo.model.PrestamoSearchDto;
@@ -43,5 +41,30 @@ public class PrestamoController {
         Page<Prestamo> page = this.prestamoService.findPage(dto);
 
         return new PageImpl<>(page.getContent().stream().map(e -> mapper.map(e, PrestamoDto.class)).collect(Collectors.toList()), page.getPageable(), page.getTotalElements());
+    }
+
+    /**
+     * Método para crear o actualizar un {@link Prestamo}
+     *
+     * @param id  PK de la entidad (opcional: si no viene, se crea)
+     * @param dto datos del préstamo
+     */
+    @Operation(summary = "Save or Update", description = "Method that saves or updates a Prestamo")
+    @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
+    public void save(@PathVariable(name = "id", required = false) Long id, @RequestBody PrestamoDto dto) {
+
+        this.prestamoService.save(id, dto);
+    }
+
+    /**
+     * Método para borrar un {@link Prestamo}
+     *
+     * @param id PK de la entidad
+     */
+    @Operation(summary = "Delete", description = "Method that deletes a Prestamo")
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") Long id) throws Exception {
+
+        this.prestamoService.delete(id);
     }
 }
