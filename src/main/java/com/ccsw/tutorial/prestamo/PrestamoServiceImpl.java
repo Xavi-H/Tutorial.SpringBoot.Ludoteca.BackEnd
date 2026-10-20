@@ -2,6 +2,7 @@ package com.ccsw.tutorial.prestamo;
 
 import com.ccsw.tutorial.client.ClientService;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
+import com.ccsw.tutorial.common.exception.BadRequestException;
 import com.ccsw.tutorial.game.GameService;
 import com.ccsw.tutorial.prestamo.model.Prestamo;
 import com.ccsw.tutorial.prestamo.model.PrestamoDto;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.time.temporal.ChronoUnit;
 
 @Service
 @Transactional
@@ -47,6 +50,8 @@ public class PrestamoServiceImpl implements PrestamoService {
     @Override
     public void save(Long id, PrestamoDto dto) {
 
+        this.validate(dto); // Es valida que el prestem sigui correcte abans de modificar
+
         Prestamo prestamo;
 
         if (id == null) {
@@ -71,5 +76,26 @@ public class PrestamoServiceImpl implements PrestamoService {
         }
 
         this.prestamoRepository.deleteById(id);
+    }
+
+    private void validate(PrestamoDto dto) {
+        long DIES_MAXIMS_PRESTEC = 14; // Dinamic per si es vol cambiar que sigui mes comode
+
+        // Protegeix d'un NullPointerException
+        if (dto.getGame() == null || dto.getGame().getId() == null || dto.getClient() == null || dto.getClient().getId() == null || dto.getStartDate() == null || dto.getEndDate() == null) {
+            throw new BadRequestException("Todos los campos del préstamo son obligatorios");
+        }
+
+        // Es permet un prestec d'un mateix dia
+        if (dto.getEndDate().isBefore(dto.getStartDate())) {
+            throw new BadRequestException("La fecha de fin no puede ser anterior a la fecha de inicio");
+        }
+
+        // Es compten el dia d'inici i de final
+        long days = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate()) + 1;
+
+        if (days > DIES_MAXIMS_PRESTEC) {
+            throw new BadRequestException("El período de préstamo no puede superar los " + DIES_MAXIMS_PRESTEC + " días");
+        }
     }
 }
