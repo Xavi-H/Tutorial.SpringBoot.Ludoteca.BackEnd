@@ -47,15 +47,15 @@ public class ClientServiceImpl implements ClientService {
 
         if (id == null) {
             client = new Client();
+            // Comprova si ja existeix un client amb aquest nom
+            if (clientRepository.existsByName(dto.getName())) {
+                throw new ConflictException("Ja existeix un client amb aquest nom");
+            }
+
         } else {
             client = this.get(id);
         }
-        // TODO: Permitir editar un cliente sin modificar su nombre (salta la excepcion)
-        // Comprova si ja existeix un client amb aquest nom
-        if (clientRepository.existsByName(dto.getName())) {
-            throw new ConflictException("Ja existeix un client amb aquest nom");
-        }
-        // Si no existeix el guarda correctament
+
         client.setName(dto.getName());
 
         this.clientRepository.save(client);
