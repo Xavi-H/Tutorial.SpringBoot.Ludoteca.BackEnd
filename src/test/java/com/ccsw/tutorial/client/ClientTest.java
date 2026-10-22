@@ -2,6 +2,8 @@ package com.ccsw.tutorial.client;
 
 import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.client.model.ClientDto;
+import com.ccsw.tutorial.common.exception.ConflictException;
+import com.ccsw.tutorial.prestamo.PrestamoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -21,6 +23,9 @@ public class ClientTest {
 
     @Mock
     private ClientRepository clientRepository;
+
+    @Mock
+    private PrestamoRepository prestamoRepository;
 
     @InjectMocks
     private ClientServiceImpl clientService;
@@ -126,7 +131,15 @@ public class ClientTest {
         verify(clientRepository, never()).save(any(Client.class));
     }
 
+    @Test
+    public void deleteClientWithPrestamosShouldThrowConflict() {
+
+        Client client = mock(Client.class);
+        when(clientRepository.findById(EXISTS_CATEGORY_ID)).thenReturn(Optional.of(client));
+        when(prestamoRepository.existsByClientId(EXISTS_CATEGORY_ID)).thenReturn(true);
+
+        assertThrows(ConflictException.class, () -> clientService.delete(EXISTS_CATEGORY_ID));
+        verify(clientRepository, never()).deleteById(any());
+    }
+
 }
-
-
-

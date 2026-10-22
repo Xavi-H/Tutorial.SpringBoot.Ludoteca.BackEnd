@@ -3,6 +3,7 @@ package com.ccsw.tutorial.client;
 import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.client.model.ClientDto;
 import com.ccsw.tutorial.common.exception.ConflictException;
+import com.ccsw.tutorial.prestamo.PrestamoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     ClientRepository clientRepository;
+
+    @Autowired
+    PrestamoRepository prestamoRepository;
 
     /**
      * {@inheritDoc}
@@ -69,6 +73,11 @@ public class ClientServiceImpl implements ClientService {
 
         if (this.get(id) == null) {
             throw new Exception("Not exists");
+        }
+
+        // No permetre borrar el client si te prestams asociats
+        if (this.prestamoRepository.existsByClientId(id)) {
+            throw new ConflictException("No se puede eliminar el cliente porque tiene préstamos asociados");
         }
 
         this.clientRepository.deleteById(id);

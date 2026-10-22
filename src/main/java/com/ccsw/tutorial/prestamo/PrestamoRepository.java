@@ -39,4 +39,7 @@ public interface PrestamoRepository extends CrudRepository<Prestamo, Long>, JpaS
     // Consulta per obtenir els prestams d'un client en un rang determinat
     @Query("SELECT p FROM Prestamo p WHERE p.client.id = :clientId AND p.startDate <= :endDate AND p.endDate >= :startDate")
     List<Prestamo> findPrestamsClientRang(@Param("clientId") Long clientId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    // Comproba si hi ha algun prestam amb el id del client que rep
+    boolean existsByClientId(Long clientId);
 }
