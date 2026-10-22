@@ -2,6 +2,7 @@ package com.ccsw.tutorial.category;
 
 import com.ccsw.tutorial.category.model.Category;
 import com.ccsw.tutorial.category.model.CategoryDto;
+import com.ccsw.tutorial.common.exception.ConflictException;
 import com.ccsw.tutorial.game.GameRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -110,6 +111,17 @@ public class CategoryTest {
         Category category = categoryService.get(NOT_EXISTS_CATEGORY_ID);
 
         assertNull(category);
+    }
+
+    @Test
+    public void deleteCategoryWithGamesShouldThrowConflict() {
+
+        Category category = mock(Category.class);
+        when(categoryRepository.findById(EXISTS_CATEGORY_ID)).thenReturn(Optional.of(category));
+        when(gameRepository.existsByCategoryId(EXISTS_CATEGORY_ID)).thenReturn(true);
+
+        assertThrows(ConflictException.class, () -> categoryService.delete(EXISTS_CATEGORY_ID));
+        verify(categoryRepository, never()).deleteById(any());
     }
 }
 
